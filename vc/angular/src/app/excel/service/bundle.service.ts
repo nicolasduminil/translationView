@@ -17,5 +17,6 @@ export class BundleService {
   getBundles(): Observable<Bundle[]> {
     const params = new HttpParams().set('start', '0');
     return this.http.get(this.url, { params }).map((response: Response) => response.json().data as Bundle[]);
+    //return this.http.get<Bundle[]>(this.url, { params });
   }
 }

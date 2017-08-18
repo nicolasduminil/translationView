@@ -4,6 +4,7 @@ import { MenuItem } from 'primeng/components/common/api';
 import { SelectItem } from 'primeng/components/common/api';
 import { BundleService } from './service/bundle.service';
 import Bundle from './service/bundle';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-excel',
@@ -22,7 +23,7 @@ export class ExcelComponent implements OnInit {
 
   generateBundles(bundlesArray: Bundle[]) {
     for (let bundle of bundlesArray) {
-      this.bundles.push({label: bundle.label, value: {name: bundle.codePk}});
+      this.bundles.push({label: bundle.label, value: {codePk: bundle.codePk, label: bundle.label, isActive: bundle.isActive}});
     }
   }
 
@@ -33,8 +34,10 @@ export class ExcelComponent implements OnInit {
     ];
     this.activeItem = this.items[2];
     this.bundleService.getBundles().subscribe((bundlesArray: Bundle[]) => {
+      /*for (let b of bundlesArray)
+        console.log(b);*/
       this.generateBundles(bundlesArray);
-    });
+   });
   }
   
   onChangeStep(label: string) {
