@@ -1,0 +1,24 @@
+/* Version: <revision>                              */
+/* Date:    <date>                                  */
+/*
+ * Signature template
+ *
+ * MODULE SPECIFICATION
+ * Name:
+ *  "%PID%"
+ *  %PM%
+ * Status:
+ *  %PS%
+ * System:
+ *  %PP%
+ * Description:
+ *  %PD%
+ * Functions defined:
+ * Notes:
+ *-----------------------------------------------------------------------------
+ * HISTORY
+ *
+%PL%
+%PCMS_HEADER_SUBSTITUTION_END%
+ *-----------------------------------------------------------------------------
+ */

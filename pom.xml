@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.coface.corp</groupId>
+    <artifactId>mavenCofaceProject</artifactId>
+    <version>RELEASE</version>
+  </parent>
+
+  <groupId>com.coface.corp.translationView.translationView</groupId>
+  <artifactId>translationView</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>translationView</name>
+  <url>http://dsiwikis/af/translationView</url>
+
+  <properties>
+    <!-- Common artefacts -->
+    <wlfullclient.version>10.3.6</wlfullclient.version>
+
+    <!-- Coface artefacts -->
+    <framework.version>LATEST</framework.version>
+    <framework-security.version>LATEST</framework-security.version>
+    <carbase.version>LATEST</carbase.version>
+    <constants.version>LATEST</constants.version>
+
+    <!-- Has to run on WLS 10.3.6 (Java EE 5) so JPA 1.* -->
+    <hibernate-entitymanager.version>3.6.9.Final</hibernate-entitymanager.version>
+    <hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
+    <hibernate.version>3.6.9.Final</hibernate.version>
+    <slf4j.version>1.7.21</slf4j.version>
+
+    <archetype.version>1.0.4</archetype.version>
+
+    <!-- Has to run on WLS 10.3.6 (Java EE 5) so JAX-RS 1.* -->
+    <jersey.version>1.19</jersey.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- WebLogic dependencies -->
+      <dependency>
+        <groupId>com.oracle.weblogic</groupId>
+        <artifactId>wlfullclient</artifactId>
+        <version>${wlfullclient.version}</version>
+        <!-- Must not be in the server lib -->
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- All Coface dependencies -->
+      <dependency>
+        <groupId>com.coface.corp.framework</groupId>
+        <artifactId>core</artifactId>
+        <version>${framework.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.coface.corp.framework.security</groupId>
+        <artifactId>framework-security</artifactId>
+        <version>${framework-security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.coface.corp.base</groupId>
+        <artifactId>constants</artifactId>
+        <version>${constants.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.coface.corp.base</groupId>
+        <artifactId>base</artifactId>
+        <version>${carbase.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.coface.corp.car.client</groupId>
+        <artifactId>entitlementClient</artifactId>
+        <version>${carbase.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.coface.corp.car.client</groupId>
+        <artifactId>organizationClient</artifactId>
+        <version>${carbase.version}</version>
+      </dependency>
+
+      <!-- Hibernates -->
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${hibernate.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate.javax.persistence</groupId>
+        <artifactId>hibernate-jpa-2.0-api</artifactId>
+        <version>${hibernate-jpa.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-entitymanager</artifactId>
+        <version>${hibernate-entitymanager.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-jpamodelgen</artifactId>
+        <version>4.3.7.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
+      <!-- JAX-RS -->
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-core</artifactId>
+        <version>${jersey.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-server</artifactId>
+        <version>${jersey.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-servlet</artifactId>
+        <version>${jersey.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-client</artifactId>
+        <version>${jersey.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-json</artifactId>
+        <version>${jersey.version}</version>
+      </dependency>
+
+      <!-- Test -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.18.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-ejb-plugin</artifactId>
+          <version>2.5.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <modules>
+    <module>commons</module>
+    <module>ejb</module>
+    <module>vc</module>
+    <module>ear</module>
+    <module>translationView-tests</module>
+  </modules>
+
+</project>

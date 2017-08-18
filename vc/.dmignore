@@ -1,0 +1,8 @@
+bin
+build
+target
+.project
+.apt_src
+.settings
+.classpath
+.factorypath

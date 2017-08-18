@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:javaee="http://java.sun.com/xml/ns/javaee"
+	xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<display-name>translationView</display-name>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+	<!-- SSO -->
+	<!-- http://dsiwikis/fw/How_to_integrate_a_Web_application_with_Coface_SSO -->
+	<context-param>
+		<param-name>APPLICATION_ID</param-name>
+		<param-value>translationView</param-value>
+	</context-param>
+	<context-param>
+		<param-name>SSO_FILTER_PROPERTIES</param-name>
+		<param-value>SSOController</param-value>
+	</context-param>
+	<!-- filter>
+		<filter-name>SSOServletFilter</filter-name>
+		<filter-class>com.coface.corp.framework.sso.SSOServletFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>SSOServletFilter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping-->
+	<servlet>
+		<description>Servlet that redirects to the SSO portal in case of bad Authentication</description>
+		<servlet-name>EIPRedirect</servlet-name>
+		<servlet-class>com.coface.corp.framework.sso.EIPRedirectServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EIPRedirect</servlet-name>
+		<url-pattern>/EIPRedirect/*</url-pattern>
+	</servlet-mapping>
+	<error-page>
+		<error-code>401</error-code>
+		<location>/EIPRedirect</location>
+	</error-page>
+	<error-page>
+		<!-- https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode -->
+		<error-code>404</error-code>
+		<location>/</location>
+	</error-page>
+	<login-config>
+		<auth-method>CLIENT-CERT</auth-method>
+	</login-config>
+
+	<!-- XSS Prevention -->
+	<!-- http://dsiwikis/fw/XSS_Prevention -->
+	<filter>
+		<filter-name>XssServletFilter</filter-name>
+		<filter-class>com.coface.corp.framework.security.XssServletFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>XssServletFilter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
+	
+	<!-- JERSEY -->
+	<servlet>
+		<servlet-name>jersey-serlvet</servlet-name>
+		<servlet-class>
+             com.sun.jersey.spi.container.servlet.ServletContainer
+        </servlet-class>
+		<init-param>
+		     <param-name>com.sun.jersey.config.property.packages</param-name>
+		     <param-value>com.coface.corp.translationView.rest</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>jersey-serlvet</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+	
+</web-app>

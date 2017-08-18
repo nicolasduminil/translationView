@@ -1,0 +1,33 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a routerLink="/" class="navbar-left"><img src="assets/logo_coface.png" class="img-responsive" alt="Coface logo"></a>
+            <span class="navbar-brand">Coface Translation Tools</span>
+        </div>
+
+        <ul class="nav navbar-nav">
+            <li>
+                <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+            </li>
+            <li>
+                <a routerLink="/heroes" routerLinkActive="active">Heroes</a>
+            </li>
+            <li>
+                <a routerLink="/excel" routerLinkActive="active">Excel</a>
+            </li>
+        </ul>
+
+        <div class="nav navbar-nav navbar-right">
+            <span class="navbar-text">{{user?.displayedName}}</span>
+            <button class="btn navbar-btn" [ngStyle]="{'color': color, 'background-color': backgroundColor}" (click)="logout()">
+					<span class="glyphicon glyphicon-log-out"></span> Logout {{properties?.shortName}}
+				</button>
+        </div>
+    </div>
+</nav>
+
+<div class="panel" style='padding-top: 50px;'>
+    <div class="panel-body">
+        <router-outlet></router-outlet>
+    </div>
+</div>

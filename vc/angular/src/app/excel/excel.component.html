@@ -1,0 +1,44 @@
+<p-tabView name="Excel">
+  <p-tabPanel header="Import">
+    <p-fileUpload name="demofiles[]" url="http://localhost:3004/fake-backend" [multiple]="multiple" [auto]="auto" (onUpload)="onUpload($event)">
+    </p-fileUpload>
+    <table cellpadding="0" cellspacing="0" class="checkboxes">
+      <tr>
+        <td class="checkbox">
+          <p-checkbox binary="true" label="Multiple" [(ngModel)]="multiple"></p-checkbox>
+        </td>
+        <td class="checkbox">
+          <p-checkbox binary="true" label="Auto" [(ngModel)]="auto"></p-checkbox>
+        </td>
+      </tr>
+    </table>
+  </p-tabPanel>
+  <p-tabPanel header="Export">
+    <form novalidate>
+      <table class="exportTable">
+        <tr>
+          <td>
+            <label for="select">Export XLS file</label>
+          </td>
+          <td>
+            <p-multiSelect name="select" [options]="bundles" [(ngModel)]="selectedBundles"></p-multiSelect>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="select2">Language</label>
+          </td>
+          <td>
+            <p-multiSelect name="select" [options]="languages" [(ngModel)]="selectedLanguages"></p-multiSelect>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button pButton type="button" label="OK" icon="fa-pencil" (click)="add()"></button>
+          </td>
+        </tr>
+      </table>
+      <p-growl [value]="msgs"></p-growl>
+    </form>
+  </p-tabPanel>
+</p-tabView>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="true">
+<!-- 	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender"> -->
+<!-- 		<param name="Target" value="System.out" /> -->
+<!-- 		<layout class="org.apache.log4j.PatternLayout"> -->
+<!-- 			<param name="ConversionPattern" value="%-5p [%c.%M %L] %m%n" /> -->
+<!-- 		</layout> -->
+<!-- 	</appender> -->
+	<appender name="SQL_CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="    --- %m%n" />
+		</layout>
+	</appender>
+	<appender name="TX_CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="*** %m%n" />
+		</layout>
+	</appender>
+	<appender name="AJAX_CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="*** %m%n" />
+		</layout>
+	</appender>
+	<logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="TX_CONSOLE" />
+	</logger>
+	<logger name="org.springframework.jdbc.core.JdbcTemplate" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="SQL_CONSOLE" />
+	</logger>
+	<logger name="org.ajax4jsf.resource" additivity="false">
+		<level value="error" />
+		<appender-ref ref="AJAX_CONSOLE" />
+	</logger>
+	<logger name="com.coface.i18n" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="AJAX_CONSOLE" />
+	</logger>	
+<!-- 	<root> -->
+<!-- 		<level value="info"></level> -->
+<!-- 		<appender-ref ref="CONSOLE" /> -->
+<!-- 	</root> -->
+</log4j:configuration>

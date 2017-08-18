@@ -1,0 +1,22 @@
+body {
+    color: #03375F;
+}
+
+
+/**FOOTER**/
+
+.navbar-inverse {
+    background-color: #61b57c;
+}
+
+.navbar-fixed-bottom {
+    min-height: 0;
+    border: none;
+}
+
+.navbar-fixed-bottom .navbar-text {
+    color: #ffffff;
+    font-size: 85%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>translationView</artifactId>
+		<groupId>com.coface.corp.translationView.translationView</groupId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>translationView-ejb</artifactId>
+	<packaging>ejb</packaging>
+	<name>ejb</name>
+
+
+	<dependencies>
+		<!-- Modules Dependencies -->
+		<dependency>
+			<groupId>com.coface.corp.translationView.translationView</groupId>
+			<artifactId>translationView-commons</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<!-- Framework -->
+		<dependency>
+			<groupId>com.coface.corp.framework</groupId>
+			<artifactId>core</artifactId>
+		</dependency>
+		<!-- Hibernates -->
+    <dependency>
+      <groupId>org.hibernate.javax.persistence</groupId>
+      <artifactId>hibernate-jpa-2.0-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>javassist</groupId>
+          <artifactId>javassist</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-jpamodelgen</artifactId>
+    </dependency>
+		<!-- Weblogic -->
+		<dependency>
+			<groupId>com.oracle.weblogic</groupId>
+			<artifactId>wlfullclient</artifactId>
+      <scope>provided</scope>
+		</dependency>
+	</dependencies>
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-ejb-plugin</artifactId>
+        <configuration>
+          <ejbVersion>3.0</ejbVersion>
+          <type>ejb</type>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
