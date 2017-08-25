@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.PrimaryKeyJoinColumns;
@@ -20,7 +21,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "TRANSLATION", schema = "FWTEST")
 @IdClass(TranslationId.class)
-@NamedQuery(name = "Translation.findAll", query = "select tx from Translation tx")
+@NamedQueries ({
+  @NamedQuery(name = "Translation.findAll", query = "select tx from Translation tx"),
+  @NamedQuery(name = "Translation.findAllWithDefaultEmptyValue", query = "select tx from Translation tx join tx.message msg where msg.codeApp = :bundleId and msg.suppressed = '0' and tx.clang = :langId")
+})
 @XmlRootElement
 public class Translation implements Serializable
 {

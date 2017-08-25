@@ -1,0 +1,17 @@
+<nav>
+    <ul class="nav nav-tabs">
+        <li *ngIf="user?.canManageLanguages">
+            <a [routerLink]="['language']" [routerLinkActive]="['active']" [translate]="'menu.manageLanguages'"></a>
+        </li>
+        <li *ngIf="user?.canManageBundles">
+            <a [routerLink]="['bundle']" [routerLinkActive]="['active']" [translate]="'menu.manageBundles'"></a>
+        </li>
+        <li *ngIf="user?.canRefreshCache">
+            <a [routerLink]="['cache']" [routerLinkActive]="['active']" [translate]="'menu.manageCache'"></a>
+        </li>
+    </ul>
+</nav>
+
+<div class="panel" style='padding-top: 50px;'>
+    <router-outlet></router-outlet>
+</div>

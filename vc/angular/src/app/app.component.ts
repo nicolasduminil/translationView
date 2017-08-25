@@ -1,55 +1,56 @@
+import { environment } from '../environments/environment';
 import { Component } from '@angular/core';
 
+import { TranslateService } from '@ngx-translate/core';
 import { UserService } from './user.service';
-import { User } from './user';
 import { PropertiesService } from './properties.service';
-import { Properties } from './properties';
+
+import { User } from './user';
+import { EnvironnementSignal } from './environnementSignal';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  backgroundColor = '#18b3b9';
-  color = '#ffffff';
-  envShortName='PROD';
-
   user: User;
-  properties: Properties;
+  envSignal: EnvironnementSignal;
 
-  constructor(private userService: UserService, private propertiesService: PropertiesService) { }
+  constructor(
+    private translate: TranslateService, 
+    private userService: UserService, 
+    private propertiesService: PropertiesService) {console.log('approot')}
 
-  ngOnInit(): void {
-    this.getUser();
-    this.getProperties();
+  async ngOnInit(): Promise<void> {
+    console.log('[AppComponent] - Initialization.');
+    this.initTranslate();
+    await this.getUser();
+    this.getEnvironnementSignal();
   }
 
-  getUser(): void {
+  initTranslate():void{
+    // this language will be used as a fallback when a translation isn't found in the current language
+    this.translate.setDefaultLang('en');
+    let browserLang = this.translate.getBrowserLang();
+    this.translate.use(browserLang);
+  }
+
+  getUser() : void{
     this.userService.getUser().then(user => {
       this.user = user;
-      console.log('<u2>>>', user)
     });
-    console.log('<u>>>', this.user)
   }
 
-  getProperties(): void{
-    this.propertiesService.getProperties()
-      .subscribe(data => {
-          console.log('<p2>>>', data['environment.signal.shortName'])
-
-        this.properties = new Properties(
-          data['environment.signal.colorBackground'],
-          data['environment.signal.colorForeground'],
-          data['environment.signal.shortName']
-        );
-        //this.properties = properties
-        console.log('<p2>>>', this.properties)
+  getEnvironnementSignal(): void {
+    this.propertiesService.getEnvironnementSignal()
+      .subscribe((data:EnvironnementSignal) => { 
+        this.envSignal = data;
       });
-    console.log('<p>>>', this.properties)
   }
 
   logout(): void {
-    //TODO
+    window.location.href =  environment.restCallUrl + 'admin/logout';
   }
 }
 

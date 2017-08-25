@@ -55,6 +55,16 @@
 			<artifactId>wlfullclient</artifactId>
       <scope>provided</scope>
 		</dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-codec</artifactId>
+          <groupId>commons-codec</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 	</dependencies>
   <build>
     <finalName>${project.artifactId}</finalName>

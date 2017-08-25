@@ -43,8 +43,8 @@ public class I18nBundleIT
   @Test
   public void testBundle1()
   {
-    I18nBundleList bundles = resource.queryParam("start", "0")/*.queryParam("max", "1")*/.type(MediaType.APPLICATION_JSON).get(I18nBundleList.class);
-    assertEquals(bundles.getBundles().size(), 3);
+    I18nBundleList bundles = resource.queryParam("start", "0").queryParam("max", "1").type(MediaType.APPLICATION_JSON).get(I18nBundleList.class);
+    assertEquals(bundles.getBundles().size(), 1);
   }
 
   @Test

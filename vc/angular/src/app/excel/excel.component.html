@@ -34,11 +34,11 @@
         </tr>
         <tr>
           <td colspan="2">
-            <button pButton type="button" label="OK" icon="fa-pencil" (click)="add()"></button>
+            <button pButton type="button" label="OK" icon="fa-pencil" (click)="triggerExport()"></button>
           </td>
         </tr>
       </table>
-      <p-growl [value]="msgs"></p-growl>
     </form>
+    <p-growl [value]="msgs"></p-growl>
   </p-tabPanel>
 </p-tabView>

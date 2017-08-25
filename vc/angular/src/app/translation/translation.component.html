@@ -1,0 +1,14 @@
+<nav>
+    <ul class="nav nav-tabs">
+        <li>
+            <a [routerLink]="['list']" [routerLinkActive]="['active']" [translate]="'menu.listTranslation'"></a>
+        </li>
+        <li>
+            <a [routerLink]="['search']" [routerLinkActive]="['active']" [translate]="'menu.searchTranslation'"></a>
+        </li>
+    </ul>
+</nav>
+
+<div class="panel" style='padding-top: 50px;'>
+    <router-outlet></router-outlet>
+</div>

@@ -9,22 +9,51 @@
             <li>
                 <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
             </li>
-            <li>
-                <a routerLink="/heroes" routerLinkActive="active">Heroes</a>
+            <li role="presentation" class="dropdown">
+                <a routerLink="/translation" routerLinkActive="active" [translate]="'menu.translation'" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a [routerLink]="['translation/list']" [routerLinkActive]="['active']" [translate]="'menu.listTranslation'"></a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['translation/search']" [routerLinkActive]="['active']" [translate]="'menu.searchTranslation'"></a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="user?.canManageMessages">
+                <a routerLink="/message" routerLinkActive="active" [translate]="'menu.message'"></a>
             </li>
             <li>
                 <a routerLink="/excel" routerLinkActive="active">Excel</a>
             </li>
+            <li role="presentation" class="dropdown">
+                <a routerLink="/administration" routerLinkActive="active" [translate]="'menu.administration'" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li *ngIf="user?.canManageLanguages">
+                        <a [routerLink]="['administration/language']" [routerLinkActive]="['active']" [translate]="'menu.manageLanguages'"></a>
+                    </li>
+                    <li *ngIf="user?.canManageBundles">
+                        <a [routerLink]="['administration/bundle']" [routerLinkActive]="['active']" [translate]="'menu.manageBundles'"></a>
+                    </li>
+                    <li *ngIf="user?.canRefreshCache">
+                        <a [routerLink]="['administration/cache']" [routerLinkActive]="['active']" [translate]="'menu.manageCache'"></a>
+                    </li>
+                </ul>
+            </li>
+
         </ul>
 
         <div class="nav navbar-nav navbar-right">
             <span class="navbar-text">{{user?.displayedName}}</span>
-            <button class="btn navbar-btn" [ngStyle]="{'color': color, 'background-color': backgroundColor}" (click)="logout()">
-					<span class="glyphicon glyphicon-log-out"></span> Logout {{properties?.shortName}}
+            <button class="btn navbar-btn" [ngStyle]="{'color': envSignal?.color, 'background-color': envSignal?.backgroundColor}" (click)="logout()">
+					<span class="glyphicon glyphicon-log-out"></span> Logout {{envSignal?.shortName}}
 				</button>
         </div>
     </div>
 </nav>
+
 
 <div class="panel" style='padding-top: 50px;'>
     <div class="panel-body">

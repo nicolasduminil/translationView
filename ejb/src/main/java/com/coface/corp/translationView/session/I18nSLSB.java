@@ -17,6 +17,7 @@ import com.coface.corp.translationView.model.UserData;
 import com.coface.corp.translationView.model.UserDataId;
 import com.coface.corp.translationView.model.UserLanguage;
 import com.coface.corp.translationView.model.UserLanguageId;
+import com.coface.corp.translationView.service.export.ExportContext;
 
 @Local
 @Remote
@@ -91,6 +92,10 @@ public interface I18nSLSB
   public UserData findUserDataById(UserDataId id);
 
   public void updateUserData(UserData userData);
-  
-  public List<I18nBundle> findBundleByUserApplicationId (UserApplicationId userApplicationId);
+
+  public List<I18nBundle> findBundleByUserApplicationId(UserApplicationId userApplicationId);
+
+  public List<Translation> findAllWithDefaultEmptyValue(String bundleId, String langId);
+
+  public ExportContext generateXlsFile(String[] bundleIds, String[] languageIds) throws Exception;
 }

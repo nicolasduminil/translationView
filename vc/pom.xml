@@ -1,183 +1,184 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>translationView</artifactId>
-		<groupId>com.coface.corp.translationView.translationView</groupId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>translationView</artifactId>
+    <groupId>com.coface.corp.translationView.translationView</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
 
-	<artifactId>translationView-vc</artifactId>
-	<packaging>war</packaging>
-	<name>vc</name>
+  <artifactId>translationView-vc</artifactId>
+  <packaging>war</packaging>
+  <name>vc</name>
 
-	<properties>
-		<npm.registry.url>http://frproitc03.coface.dns:8080/repository/npm-public/</npm.registry.url>
-	</properties>
+  <properties>
+    <npm.registry.url>http://frproitc03.coface.dns:8080/repository/npm-public/</npm.registry.url>
+  </properties>
 
-	<build>
-		<finalName>${project.artifactId}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<!-- Use the latest released version: https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
-				<version>1.5</version>
-				<configuration>
-					<nodeVersion>v6.11.0</nodeVersion>
-					<npmVersion>3.10.10</npmVersion>
-					<nodeDownloadRoot>http://dsiwikis.coface.dns/publication/fw/node/</nodeDownloadRoot>
-					<npmDownloadRoot>http://dsiwikis.coface.dns/publication/fw/npm/</npmDownloadRoot>
-					<workingDirectory>angular</workingDirectory>
-					<installDirectory>target</installDirectory>
-					<npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
-					<environmentVariables>
-						<!--PYTHON>C:\DEV\python27\python.exe</PYTHON -->
-						<!--HTTPS_PROXY>${myProxy}</HTTPS_PROXY -->
-						<SASS_BINARY_SITE>http://dsiwikis.coface.dns/publication/fw/sass</SASS_BINARY_SITE>
-					</environmentVariables>
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <!-- Use the latest released version: https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
+        <version>1.5</version>
+        <configuration>
+          <nodeVersion>v6.11.0</nodeVersion>
+          <npmVersion>3.10.10</npmVersion>
+          <nodeDownloadRoot>http://dsiwikis.coface.dns/publication/fw/node/</nodeDownloadRoot>
+          <npmDownloadRoot>http://dsiwikis.coface.dns/publication/fw/npm/</npmDownloadRoot>
+          <workingDirectory>angular</workingDirectory>
+          <installDirectory>target</installDirectory>
+          <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
+          <environmentVariables>
+            <!--PYTHON>C:\DEV\python27\python.exe</PYTHON -->
+            <!--HTTPS_PROXY>${myProxy}</HTTPS_PROXY -->
+            <SASS_BINARY_SITE>http://dsiwikis.coface.dns/publication/fw/sass</SASS_BINARY_SITE>
+          </environmentVariables>
           <arguments>install primeng --save</arguments>
-				</configuration>
-				<executions>
-					<execution>
-						<id>install node and npm</id>
-						<goals>
-							<goal>install-node-and-npm</goal>
-						</goals>
-						<phase>generate-resources</phase>
-					</execution>
-					<execution>
-						<id>npm install</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<phase>generate-resources</phase>
-						<configuration>
-							<arguments>install --registry=${npm.registry.url}</arguments>
-						</configuration>
-					</execution>
-					<!--execution> <id>angular-cli install</id> <goals> <goal>npm</goal> 
-						</goals> <phase>generate-resources</phase> <configuration> <arguments>install 
-						-no-optional -g @angular/cli -registry=${npm.registry.url}</arguments> </configuration> 
-						</execution -->
-					<execution>
-						<id>npm run-script maven-build</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>run-script maven-build</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <arguments>install --registry=${npm.registry.url}</arguments>
+            </configuration>
+          </execution>
+          <!--execution> <id>angular-cli install</id> <goals> <goal>npm</goal> </goals> <phase>generate-resources</phase> <configuration> <arguments>install -no-optional -g @angular/cli -registry=${npm.registry.url}</arguments> </configuration> 
+            </execution -->
+          <execution>
+            <id>npm run-script maven-build</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run-script maven-build</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<webResources>
-						<resource>
-							<directory>angular/webapp/</directory>
-							<filtering>false</filtering>
-							<excludes>
-								<exclude>**/.dm/*</exclude>
-								<exclude>*.html</exclude>
-							</excludes>
-						</resource>
-						<resource>
-							<directory>angular/webapp/</directory>
-							<filtering>true</filtering>
-							<includes>
-								<include>*.html</include>
-							</includes>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>angular/webapp/</directory>
+              <filtering>false</filtering>
+              <excludes>
+                <exclude>**/.dm/*</exclude>
+                <exclude>*.html</exclude>
+              </excludes>
+            </resource>
+            <resource>
+              <directory>angular/webapp/</directory>
+              <filtering>true</filtering>
+              <includes>
+                <include>*.html</include>
+              </includes>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
-	<dependencies>
-		<!-- WebLogic dependencies -->
-		<dependency>
-			<groupId>com.oracle.weblogic</groupId>
-			<artifactId>wlfullclient</artifactId>
-			<scope>provided</scope>
-		</dependency>
+  <dependencies>
+    <!-- WebLogic dependencies -->
+    <dependency>
+      <groupId>com.oracle.weblogic</groupId>
+      <artifactId>wlfullclient</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
-		<!-- All Coface dependencies -->
-		<dependency>
-			<groupId>com.coface.corp.framework</groupId>
-			<artifactId>core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.coface.corp.framework.security</groupId>
-			<artifactId>framework-security</artifactId>
-		</dependency>
+    <!-- All Coface dependencies -->
+    <dependency>
+      <groupId>com.coface.corp.framework</groupId>
+      <artifactId>core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.coface.corp.framework.security</groupId>
+      <artifactId>framework-security</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>com.coface.corp.base</groupId>
-			<artifactId>constants</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.coface.corp.base</groupId>
-			<artifactId>base</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>com.coface.corp.base</groupId>
+      <artifactId>constants</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.coface.corp.base</groupId>
+      <artifactId>base</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>com.coface.corp.car.client</groupId>
-			<artifactId>entitlementClient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.coface.corp.car.client</groupId>
-			<artifactId>organizationClient</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>com.coface.corp.car.client</groupId>
+      <artifactId>entitlementClient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.coface.corp.car.client</groupId>
+      <artifactId>organizationClient</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-servlet</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-json</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-servlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-client</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-json</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey.contribs</groupId>
+      <artifactId>jersey-multipart</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
 
-		<!-- Test dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.coface.corp.translationView.translationView</groupId>
-			<artifactId>translationView-commons</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.coface.corp.translationView.translationView</groupId>
-			<artifactId>translationView-ejb</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>provided</scope>
-			<type>ejb</type>
-		</dependency>
-	</dependencies>
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.coface.corp.translationView.translationView</groupId>
+      <artifactId>translationView-commons</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.coface.corp.translationView.translationView</groupId>
+      <artifactId>translationView-ejb</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>provided</scope>
+      <type>ejb</type>
+    </dependency>
+  </dependencies>
 
 </project>

@@ -5,7 +5,9 @@
 
 export const environment = {
   production: false,
-  restCallUrl: 'rest/',
-  //restCallUrl: 'http://grprocxv93-037.group.coface.dns:7001/translationView/rest/'
-  bundleServiceCallUrl: 'http://localhost:7001/translationView/rest/i18nbundles'
+  //TODO 1 env file by dev
+  restCallUrl: 'http://grprocxv93-037.group.coface.dns:7001/translationView/rest/',
+  bundleServiceCallUrl: "http://localhost:7001/translationView/rest/i18nbundles",
+  languageServiceCallUrl: "http://localhost:7001/translationView/rest/i18nlanguages",
+  downloadServiceCallUrl: "http://localhost:7001/translationView/rest/translations/export"
 };

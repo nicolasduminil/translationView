@@ -2,21 +2,24 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
   <persistence-unit name="i18nPU" transaction-type="JTA">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <jta-data-source>jdbc/i18n-dev</jta-data-source>
+    <jta-data-source>jdbc/i18n</jta-data-source>
     <jar-file>APP-INF/lib/commons.jar</jar-file>
-    <properties>
-      <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
-      <property name="transaction.factory_class" value="org.hibernate.transaction.CMTTransactionFactory" />
-      <property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.WeblogicTransactionManagerLookup" />
-      <property name="hibernate.show_sql" value="true" />
-      <property name="hibernate.format_sql" value="true" />
-      <property name="hibernate.use_sql_comments" value="true" />
-      <property name="hibernate.hbm2ddl.auto" value="update" />
-      <property name="hibernate.transaction.auto_close_session" value="true" />
-      <property name="hibernate.transaction.flush_before_completion" value="true" />
-      <property name="hibernate.default_batch_fetch_size" value="10" />
-      <property name="hibernate.max_fetch_depth" value="0" />
-    </properties>
+    
+ 	<properties>
+		<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+		<property name="transaction.factory_class"	value="org.hibernate.transaction.CMTTransactionFactory" />
+		<property name="hibernate.transaction.manager_lookup_class"		value="org.hibernate.transaction.WeblogicTransactionManagerLookup" />
+		<property name="hibernate.transaction.auto_close_session"		value="true" />
+		<property name="hibernate.transaction.flush_before_completion"	value="true" />
+		<property name="hibernate.show_sql" value="true" />
+		<property name="hibernate.format_sql" value="true" />
+		<property name="hibernate.default_batch_fetch_size" value="10" />
+		<property name="hibernate.max_fetch_depth" value="0" />		
+		
+		<property name="hibernate.use_sql_comments" value="true" />
+        <!-- property name="hibernate.hbm2ddl.auto" value="update" /-->	
+	</properties>
+
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
   </persistence-unit>
 </persistence>
