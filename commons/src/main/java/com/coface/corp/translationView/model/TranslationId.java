@@ -1,14 +1,16 @@
 package com.coface.corp.translationView.model;
 
+import javax.persistence.Embeddable;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@Embeddable
 @XmlRootElement
 public class TranslationId implements java.io.Serializable
 {
   private static final long serialVersionUID = 1L;
-  private String atagId;
-  private String bcodeApp;
-  private String clang;
+  private String tagId;
+  private String codeApp;
+  private String lang;
 
   public TranslationId()
   {
@@ -16,50 +18,45 @@ public class TranslationId implements java.io.Serializable
 
   public TranslationId(String tagId, String codeApp, String lang)
   {
-    this.atagId = tagId;
-    this.bcodeApp = codeApp;
-    this.clang = lang;
+    this.tagId = tagId;
+    this.codeApp = codeApp;
+    this.lang = lang;
   }
 
-  public String getAtagId()
+  public String getTagId()
   {
-    return this.atagId;
+    return this.tagId;
   }
 
-  public void setAtagId(String tagId)
+  public void setTagId(String tagId)
   {
-    this.atagId = tagId;
+    this.tagId = tagId;
   }
 
-  public String getBcodeApp()
+  public String getCodeApp()
   {
-    return this.bcodeApp;
+    return this.codeApp;
   }
 
-  public void setBcodeApp(String codeApp)
+  public void setCodeApp(String codeApp)
   {
-    this.bcodeApp = codeApp;
+    this.codeApp = codeApp;
   }
 
-  public String getClang()
+  public String getLang()
   {
-    return this.clang;
+    return this.lang;
   }
 
-  public void setClang(String lang)
+  public void setLang(String lang)
   {
-    this.clang = lang;
+    this.lang = lang;
   }
 
   @Override
   public int hashCode()
   {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((atagId == null) ? 0 : atagId.hashCode());
-    result = prime * result + ((bcodeApp == null) ? 0 : bcodeApp.hashCode());
-    result = prime * result + ((clang == null) ? 0 : clang.hashCode());
-    return result;
+    return 53;
   }
 
   @Override
@@ -67,32 +64,9 @@ public class TranslationId implements java.io.Serializable
   {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!(obj instanceof TranslationId))
       return false;
-    if (getClass() != obj.getClass())
-      return false;
-    TranslationId other = (TranslationId) obj;
-    if (atagId == null)
-    {
-      if (other.atagId != null)
-        return false;
-    }
-    else if (!atagId.equals(other.atagId))
-      return false;
-    if (bcodeApp == null)
-    {
-      if (other.bcodeApp != null)
-        return false;
-    }
-    else if (!bcodeApp.equals(other.bcodeApp))
-      return false;
-    if (clang == null)
-    {
-      if (other.clang != null)
-        return false;
-    }
-    else if (!clang.equals(other.clang))
-      return false;
-    return true;
+    return codeApp != null && codeApp.equals(((TranslationId) obj).codeApp) && tagId != null && tagId.equals(((TranslationId) obj).tagId)
+        && lang != null && lang.equals(((TranslationId) obj).lang);
   }
 }

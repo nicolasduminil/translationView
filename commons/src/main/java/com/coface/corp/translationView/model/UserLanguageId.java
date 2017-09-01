@@ -47,11 +47,7 @@ public class UserLanguageId implements java.io.Serializable
   @Override
   public int hashCode()
   {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((lang == null) ? 0 : lang.hashCode());
-    result = prime * result + ((userId == null) ? 0 : userId.hashCode());
-    return result;
+    return 73;
   }
 
   @Override
@@ -59,25 +55,8 @@ public class UserLanguageId implements java.io.Serializable
   {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!(obj instanceof TranslationId))
       return false;
-    if (getClass() != obj.getClass())
-      return false;
-    UserLanguageId other = (UserLanguageId) obj;
-    if (lang == null)
-    {
-      if (other.lang != null)
-        return false;
-    }
-    else if (!lang.equals(other.lang))
-      return false;
-    if (userId == null)
-    {
-      if (other.userId != null)
-        return false;
-    }
-    else if (!userId.equals(other.userId))
-      return false;
-    return true;
+    return userId != null && userId.equals(((UserLanguageId) obj).userId) && lang != null && lang.equals(((UserLanguageId) obj).lang);
   }
 }

@@ -9,11 +9,14 @@ import Bundle from "./service/bundle";
 import Language from "./service/Language";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
+import { ViewEncapsulation } from "@angular/core";
 
 
 @Component({
   selector: "app-excel",
-  templateUrl: "./excel.component.html"
+  templateUrl: "./excel.component.html",
+  styleUrls: ['./excel.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ExcelComponent implements OnInit {
   private bundles = new Array<SelectItem>();
@@ -22,18 +25,24 @@ export class ExcelComponent implements OnInit {
   private selectedBundles = new Array<String>();
   private selectedLanguages = new Array<String>();
   private msgs = new Array<Message>();
-
+  private multiple = Boolean(false);
+  private auto = Boolean(false);
+  private createUpdate = Boolean(false);
+  private createOnly = Boolean(false);
+  private createMissingMessages = Boolean(false);
+  private createMissingBundles = Boolean(false);
+  private uploadedFiles: any[] = [];
 
   constructor(private bundleService: BundleService, private languageService: LanguageService, private downloadService: DownloadService) { }
 
   private pushBundles(bundlesArray: Array<Bundle>) {
     for (let bundle of bundlesArray)
-      this.bundles.push({ label: bundle.label, value: /*{codePk: bundle.codePk, label: bundle.label, isActive: bundle.isActive}*/bundle.codePk });
+      this.bundles.push({ label: bundle.label, value: bundle.codePk });
   }
 
   private pushLanguages(languagesArray: Array<Language>) {
     for (let language of languagesArray)
-      this.languages.push({ label: language.label, value: /*{codePk: language.codePk, label: language.label, isActive: language.isActive, isReference: language.isReference}*/language.codePk });
+      this.languages.push({ label: language.label, value: language.codePk });
   }
 
   public ngOnInit() {
@@ -41,7 +50,7 @@ export class ExcelComponent implements OnInit {
       { label: "Import", icon: "fa-bar-chart", routerLink: ["/pages/import"] },
       { label: "Export", icon: "fa-twitter", routerLink: ["/pages/export"] }
     ];
-    this.bundleService.getBundles().subscribe((bundlesArray: Array<Bundle>) => { console.log(bundlesArray); this.pushBundles(bundlesArray["bundles"]) },
+    this.bundleService.getBundles().subscribe((bundlesArray: Array<Bundle>) => { this.pushBundles(bundlesArray["bundles"]) },
       (err: HttpErrorResponse) => {
         if (err.error instanceof Error) {
           console.log("### Client-side error occured.");
@@ -61,10 +70,19 @@ export class ExcelComponent implements OnInit {
 
   public triggerExport() {
     this.downloadService.downloadFile(this.selectedBundles,
-      this.selectedLanguages).subscribe(res => {
+      this.selectedLanguages).map(res => res).subscribe(res => {
         this.msgs.push({ severity: 'info', summary: "File has been downloaded", detail: "Got a file " + res });
         this.selectedBundles.length = 0;
         this.selectedLanguages.length = 0;
       });
+  }
+
+  public onUpload(event: any) {
+    for (let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    console.log("onUpload", this.uploadedFiles);
+    this.msgs = [];
+    this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: "Have uploaded files"});
   }
 }

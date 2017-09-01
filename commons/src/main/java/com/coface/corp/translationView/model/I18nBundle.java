@@ -72,4 +72,18 @@ public class I18nBundle implements Serializable
   {
     this.isActive = isActive;
   }
+
+  @Override
+  public int hashCode()
+  {
+    return 31;
+  }
+
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (this == obj) return true;
+    if (!(obj instanceof I18nBundle)) return false;
+    return codePk != null && codePk.equals(((I18nBundle)obj).codePk);
+  }
 }

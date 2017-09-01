@@ -3,25 +3,27 @@ package com.coface.corp.translationView.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "MESSAGE", schema = "FWTEST")
-@IdClass(MessageId.class)
-@NamedQuery(name="Message.findAll", query="select msg from Message msg")
+@NamedQueries({
+@NamedQuery(name = "Message.findAll", query = "select msg from Message msg"),
+@NamedQuery (name="Message.findAllWithNoTranslations", query = "select ts from Translation ts join ts.message msg where msg.id.codeApp = :msgId and msg.suppressed = '0' and (ts.i18nLanguage = :lang or ts.i18nLanguage is null) and ts.id.tagId is null"),
+@NamedQuery (name="Message.findByBundle", query = "select msg from Message msg where msg.id.codeApp = :codeApp and msg.id.codeApp = msg.i18nBundle.codePk")})
 @XmlRootElement
 public class Message implements Serializable
 {
   private static final long serialVersionUID = 1L;
-  private String tagId;
-  private String codeApp;
+  private MessageId id;
   private I18nBundle i18nBundle;
   private String usedInJavascript;
   private String usedInXml;
@@ -32,48 +34,35 @@ public class Message implements Serializable
   {
   }
 
-  public Message(MessageId messageId, I18nBundle i18nBundle)
+  public Message(MessageId id, I18nBundle i18nBundle)
   {
-    this.tagId = messageId.getTagId();
-    this.codeApp = messageId.getCodeApp();
+    this.id = id;
     this.i18nBundle = i18nBundle;
   }
-  
-  public Message(MessageId messageId, I18nBundle i18nBundle, String usedInJavascript, String usedInXml, String suppressed, String usedInHtml)
+
+  public Message(MessageId id, I18nBundle i18nBundle, String usedInJavascript, String usedInXml, String suppressed, String usedInHtml)
   {
-    this (messageId, i18nBundle);
+    this.id = id;
+    this.i18nBundle = i18nBundle;
     this.usedInJavascript = usedInJavascript;
     this.usedInXml = usedInXml;
     this.suppressed = suppressed;
     this.usedInHtml = usedInHtml;
   }
 
-  @Id
-  @Column(name = "TAG_ID", length = 100)
-  public String getTagId()
+  @EmbeddedId
+  public MessageId getId()
   {
-    return this.tagId;
-  }
-  
-  public void setTagId(String tagId)
-  {
-    this.tagId = tagId;
+    return this.id;
   }
 
-  @Id
-  @Column(name = "CODE_APP", length = 100)
-  public String getCodeApp()
+  public void setId(MessageId id)
   {
-    return codeApp;
-  }
-  
-  public void setCodeApp(String codeApp)
-  {
-    this.codeApp = codeApp;
+    this.id = id;
   }
 
-  @ManyToOne
-  @PrimaryKeyJoinColumn(name = "CODE_APP", referencedColumnName = "CODE_PK")
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "CODE_APP", nullable = false, insertable = false, updatable = false)
   public I18nBundle getI18nBundle()
   {
     return this.i18nBundle;
@@ -126,5 +115,21 @@ public class Message implements Serializable
   public void setUsedInHtml(String usedInHtml)
   {
     this.usedInHtml = usedInHtml;
+  }
+
+  @Override
+  public int hashCode()
+  {
+    return 41;
+  }
+
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (this == obj)
+      return true;
+    if (!(obj instanceof Message))
+      return false;
+    return id != null && id.equals(((Message) obj).id);
   }
 }

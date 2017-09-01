@@ -42,8 +42,8 @@ export class UserService {
   //   return Promise.reject(error.message || error);
   // }
 
-  hasRightForAction(action: string): Promise<boolean> {
-    const url = `${this.userURL}/hasAction/${action}`;
-    return this.httpClient.get<boolean>(url).toPromise();
-  }
+  // hasRightForAction(action: string): Promise<boolean> {
+  //   const url = `${this.userURL}/hasAction/${action}`;
+  //   return this.httpClient.get<boolean>(url).toPromise();
+  // }
 }

@@ -57,21 +57,21 @@ public class HelloWorldService {
 	
 	/*** Translations ***/
 	
-	@GET
-	@Path("/translations/{lang}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, String> getTranslations(@PathParam("lang") String lang) {
-		HashMap<String, String> translations = new HashMap<String, String>();
-		String bundleName = "bcTestView";
-		ResourceBundle resource = ResourceBundle.getBundle(bundleName, new Locale(lang));
-		Enumeration<String> keys = resource.getKeys();
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
-			//If multi bundle set key = bundle.key
-			translations.put(key, resource.getString(key));
-		}
-		return translations;
+@GET
+@Path("/translations/{lang}")
+@Produces(MediaType.APPLICATION_JSON)
+public Map<String, String> getTranslations(@PathParam("lang") String lang) {
+	HashMap<String, String> translations = new HashMap<String, String>();
+	String bundleName = "translationView";
+	ResourceBundle resource = ResourceBundle.getBundle(bundleName, new Locale(lang));
+	Enumeration<String> keys = resource.getKeys();
+	while (keys.hasMoreElements()) {
+		String key = keys.nextElement();
+		//If multi bundle set key = bundle.key
+		translations.put(key, resource.getString(key));
 	}
+	return translations;
+}
 	
 	/*** Conf ***/
 	

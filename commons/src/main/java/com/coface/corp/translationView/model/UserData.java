@@ -2,9 +2,6 @@ package com.coface.corp.translationView.model;
 
 import java.io.Serializable;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
@@ -42,7 +39,6 @@ public class UserData implements Serializable
   }
 
   @EmbeddedId
-  @AttributeOverrides({ @AttributeOverride(name = "login", column = @Column(name = "LOGIN", nullable = false, length = 80)), @AttributeOverride(name = "groupId", column = @Column(name = "GROUP_ID", nullable = false, length = 160)) })
   public UserDataId getId()
   {
     return this.id;
@@ -111,5 +107,21 @@ public class UserData implements Serializable
   public void setRefLang(String refLang)
   {
     this.refLang = refLang;
+  }
+
+  @Override
+  public int hashCode()
+  {
+    return 61;
+  }
+
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (this == obj)
+      return true;
+    if (!(obj instanceof Translation))
+      return false;
+    return id != null && id.equals(((UserData) obj).id);
   }
 }

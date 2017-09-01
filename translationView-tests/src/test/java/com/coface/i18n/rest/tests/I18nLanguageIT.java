@@ -1,18 +1,21 @@
 package com.coface.i18n.rest.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.util.*;
+import javax.ws.rs.core.MediaType;
 
-import javax.ws.rs.core.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.junit.*;
-import org.slf4j.*;
-
-import com.coface.corp.translationView.dto.*;
-import com.coface.corp.translationView.model.*;
-import com.sun.jersey.api.client.*;
-import com.sun.jersey.api.client.config.*;
+import com.coface.corp.translationView.dto.I18nLanguageList;
+import com.coface.corp.translationView.model.I18nLanguage;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 public class I18nLanguageIT
 {

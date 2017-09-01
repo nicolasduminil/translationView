@@ -83,4 +83,18 @@ public class I18nLanguage implements Serializable
   {
     this.isActive = isActive;
   }
+
+  @Override
+  public int hashCode()
+  {
+    return 37;
+  }
+
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (this == obj) return true;
+    if (!(obj instanceof I18nLanguage)) return false;
+    return codePk != null && codePk.equals(((I18nLanguage)obj).codePk);
+  }
 }

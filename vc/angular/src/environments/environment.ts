@@ -9,5 +9,6 @@ export const environment = {
   restCallUrl: 'http://grprocxv93-037.group.coface.dns:7001/translationView/rest/',
   bundleServiceCallUrl: "http://localhost:7001/translationView/rest/i18nbundles",
   languageServiceCallUrl: "http://localhost:7001/translationView/rest/i18nlanguages",
-  downloadServiceCallUrl: "http://localhost:7001/translationView/rest/translations/export"
+  downloadServiceCallUrl: "http://localhost:7001/translationView/rest/translations/export",
+  uploadServiceCallUrl: "http://localhost:7001/translationView/rest/translations/import"
 };

@@ -1,6 +1,9 @@
 package com.coface.corp.translationView.session;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -17,7 +20,8 @@ import com.coface.corp.translationView.model.UserData;
 import com.coface.corp.translationView.model.UserDataId;
 import com.coface.corp.translationView.model.UserLanguage;
 import com.coface.corp.translationView.model.UserLanguageId;
-import com.coface.corp.translationView.service.export.ExportContext;
+import com.coface.corp.translationView.utils.export.ExportContext;
+import com.coface.corp.translationView.utils.imports.ImportResult;
 
 @Local
 @Remote
@@ -98,4 +102,14 @@ public interface I18nSLSB
   public List<Translation> findAllWithDefaultEmptyValue(String bundleId, String langId);
 
   public ExportContext generateXlsFile(String[] bundleIds, String[] languageIds) throws Exception;
+
+  public Map<I18nBundle, Map<I18nLanguage, Properties>> loadXLSDataFileContent(InputStream xlsFileData) throws Exception;
+
+  public ImportResult importProperties(Map<I18nBundle, Map<I18nLanguage, Properties>> xlsData, boolean isCreateMissingBundles) throws Exception;
+
+  public List<Message> findAllMessagesWithNoTranslations(String id, String langId);
+
+  public List<Message> findMessagesByBundle(String codeApp);
+
+  public List<Translation> findTranslationsByBundleAndLanguage(String codeApp, String lang);
 }

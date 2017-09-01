@@ -1,16 +1,23 @@
 package com.coface.i18n.rest.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.MediaType;
 
-import org.junit.*;
-import org.slf4j.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.coface.corp.translationView.dto.*;
-import com.coface.corp.translationView.model.*;
-import com.sun.jersey.api.client.*;
-import com.sun.jersey.api.client.config.*;
+import com.coface.corp.translationView.dto.MessageList;
+import com.coface.corp.translationView.model.I18nBundle;
+import com.coface.corp.translationView.model.Message;
+import com.coface.corp.translationView.model.MessageId;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 public class MessageIT
 {
@@ -45,15 +52,17 @@ public class MessageIT
   public void testMessage2()
   {
     I18nBundle bundle = new I18nBundle("codePk123", "label", "1");
+    client.resource("http://localhost:7001/translationView/rest/i18nbundles").type(MediaType.APPLICATION_JSON).post(ClientResponse.class, bundle);
     Message message = new Message (new MessageId ("tagId1", bundle.getCodePk()), bundle, "1", "1", "1", "1");
     slf4jLogger.info("*** Creating message");
     resource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, message);
     slf4jLogger.info("*** Getting message");
-    resource.path(message.getTagId()).path(message.getCodeApp()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+    resource.path(message.getId().getTagId()).path(message.getId().getCodeApp()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
     message.setUsedInXml("1");
     slf4jLogger.info("*** Updating message");
-    resource.path(message.getTagId()).path(message.getCodeApp()).type(MediaType.APPLICATION_JSON).put(ClientResponse.class, message);
+    resource.path(message.getId().getTagId()).path(message.getId().getCodeApp()).type(MediaType.APPLICATION_JSON).put(ClientResponse.class, message);
     slf4jLogger.info("*** Deleting message");
-    resource.path(message.getTagId()).path(message.getCodeApp());
+    resource.path(message.getId().getTagId()).path(message.getId().getCodeApp()).delete();
+    client.resource("http://localhost:7001/translationView/rest/i18nbundles").path("codePk123").delete();
   }
 }

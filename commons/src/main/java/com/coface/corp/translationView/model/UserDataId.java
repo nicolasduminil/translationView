@@ -46,14 +46,11 @@ public class UserDataId implements Serializable
   {
     this.groupId = groupId;
   }
+
   @Override
   public int hashCode()
   {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
-    result = prime * result + ((login == null) ? 0 : login.hashCode());
-    return result;
+    return 67;
   }
 
   @Override
@@ -61,25 +58,8 @@ public class UserDataId implements Serializable
   {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!(obj instanceof TranslationId))
       return false;
-    if (getClass() != obj.getClass())
-      return false;
-    UserDataId other = (UserDataId) obj;
-    if (groupId == null)
-    {
-      if (other.groupId != null)
-        return false;
-    }
-    else if (!groupId.equals(other.groupId))
-      return false;
-    if (login == null)
-    {
-      if (other.login != null)
-        return false;
-    }
-    else if (!login.equals(other.login))
-      return false;
-    return true;
+    return login != null && login.equals(((UserDataId) obj).login) && groupId != null && groupId.equals(((UserDataId) obj).groupId);
   }
 }

@@ -32,7 +32,7 @@ public class MessageEndpoint
   public Response create(Message dto)
   {
     ejb.createMessage(dto);
-    return Response.created(UriBuilder.fromResource(MessageEndpoint.class).path(dto.getTagId()).path(dto.getI18nBundle().getCodePk()).build()).build();
+    return Response.created(UriBuilder.fromResource(MessageEndpoint.class).path(dto.getId().getTagId()).path(dto.getI18nBundle().getCodePk()).build()).build();
   }
 
   @DELETE
@@ -71,7 +71,7 @@ public class MessageEndpoint
     else
     {
       MessageId messageId = new MessageId(id, app);
-      if (!messageId.getTagId().equals(entity.getTagId()))
+      if (!messageId.getTagId().equals(entity.getId().getTagId()))
         resp = Response.status(Status.CONFLICT).entity(entity).build();
       else
         ejb.updateMessage(entity);

@@ -3,8 +3,15 @@ package com.coface.corp.translationView.session;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -14,6 +21,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.xml.rpc.ServiceException;
 
+import org.apache.commons.collections.Closure;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -22,6 +31,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,14 +47,16 @@ import com.coface.corp.translationView.model.UserData;
 import com.coface.corp.translationView.model.UserDataId;
 import com.coface.corp.translationView.model.UserLanguage;
 import com.coface.corp.translationView.model.UserLanguageId;
-import com.coface.corp.translationView.service.export.ExcelBundleDataModel;
-import com.coface.corp.translationView.service.export.ExportContext;
+import com.coface.corp.translationView.utils.export.ExcelBundleDataModel;
+import com.coface.corp.translationView.utils.export.ExportContext;
+import com.coface.corp.translationView.utils.imports.ImportResult;
+import com.coface.corp.translationView.utils.imports.TranslationSheet;
 
 @Stateless(mappedName = "i18nAPI")
 public class I18nSLSBImpl implements I18nSLSB
 {
   private static Logger slf4jLogger = LoggerFactory.getLogger(I18nSLSBImpl.class);
-  
+
   @PersistenceContext(unitName = "i18nPU")
   private EntityManager em;
 
@@ -57,6 +69,9 @@ public class I18nSLSBImpl implements I18nSLSB
   private Query findAllUserLanguages = null;
   private Query findBundleByUserApplicationIdQuery = null;
   private Query findAllWithDefaultEmptyValueQuery = null;
+  private Query findAllMessagesWithNoTranslations = null;
+  private Query findMessagesByBundle = null;
+  private Query findTranslationByByBundleandLanguage = null;
 
   @SuppressWarnings("unchecked")
   @Override
@@ -91,7 +106,7 @@ public class I18nSLSBImpl implements I18nSLSB
   }
 
   @Override
-  @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)  
+  @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
   public I18nBundle findBundleById(String id)
   {
     return em.find(I18nBundle.class, id);
@@ -394,11 +409,42 @@ public class I18nSLSBImpl implements I18nSLSB
     return findQuery.getResultList();
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+  public List<Message> findAllMessagesWithNoTranslations(String id, String langId)
+  {
+    Query findQuery = this.getFindAllMessagessWithNoTranslations();
+    findQuery.setParameter("msgId", id);
+    findQuery.setParameter("lang", langId);
+    return findQuery.getResultList();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+  public List<Message> findMessagesByBundle(String codeApp)
+  {
+    Query findQuery = this.getFindMessagesByBundle();
+    findQuery.setParameter("codeApp", codeApp);
+    return findQuery.getResultList();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+  public List<Translation> findTranslationsByBundleAndLanguage(String codeApp, String lang)
+  {
+    Query findQuery = this.getFindTranslationByByBundleandLanguage();
+    findQuery.setParameter("msgId", codeApp);
+    findQuery.setParameter("lang", lang);
+    return findQuery.getResultList();
+  }
+
   @Override
   @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
   public ExportContext generateXlsFile(String[] bundleIds, String[] languageIds) throws Exception
   {
-    slf4jLogger.info("*** generateXlsFile "+ bundleIds + " " + languageIds);    
     ExportContext exportContext = new ExportContext();
     File folder = exportContext.createTempDirectory();
     FileOutputStream xlsFileOutputStream = null;
@@ -406,12 +452,9 @@ public class I18nSLSBImpl implements I18nSLSB
     {
       ExcelBundleDataModel excelBundleModel = getExcelBundleDataSet(bundleIds, languageIds);
       HSSFWorkbook workBook = createWorkBook(excelBundleModel);
-      slf4jLogger.info("*** generateXlsFile: Have created the workbook");    
       File xlsFile = new File(folder + File.separator + "exportTranslations.xls");
-      slf4jLogger.info("*** generateXlsFile: Have created the file");    
       xlsFileOutputStream = new FileOutputStream(xlsFile);
       workBook.write(xlsFileOutputStream);
-      slf4jLogger.info("*** generateXlsFile: Have written th file");    
       exportContext.setFilePath(xlsFile.getAbsolutePath());
       exportContext.setResultFile(xlsFile);
       return exportContext;
@@ -436,7 +479,118 @@ public class I18nSLSBImpl implements I18nSLSB
         }
       }
     }
+  }
 
+  @Override
+  public Map<I18nBundle, Map<I18nLanguage, Properties>> loadXLSDataFileContent(final InputStream xlsFileData) throws Exception
+  {
+    Map<I18nBundle, Map<I18nLanguage, Properties>> map = new HashMap<I18nBundle, Map<I18nLanguage, Properties>>();
+    POIFSFileSystem fs = new POIFSFileSystem(xlsFileData);
+    HSSFWorkbook wb = new HSSFWorkbook(fs);
+    int nbApplicationBundles = wb.getNumberOfSheets();
+    for (int sheetIndex = 0; sheetIndex < nbApplicationBundles; sheetIndex++)
+    {
+      HSSFSheet sheet = wb.getSheetAt(sheetIndex);
+      String sheetName = wb.getSheetName(sheetIndex);
+      if (!isValid(sheetName))
+        slf4jLogger.error("Fail to validate sheet name " + sheetName);
+      else
+      {
+        I18nBundle bundle = findBundleById(sheetName);
+        if (bundle == null)
+          slf4jLogger.error("Failed to find bundle with name " + sheetName);
+        else if (bundle.getIsActive().equals("0"))
+          slf4jLogger.error("Bundle with name " + sheetName + " is not active");
+        TranslationSheet translationSheet = new TranslationSheet(sheet, sheetName);
+        translationSheet.processSheet(this.listAllLanguages(null, null));
+        bundle.setCodePk(wb.getSheetName(sheetIndex));
+        map.put(bundle, translationSheet.getTranslationsMap());
+      }
+    }
+    return map;
+  }
+
+  @Override
+  public ImportResult importProperties(Map<I18nBundle, Map<I18nLanguage, Properties>> xlsData, boolean isCreateMissingBundles) throws Exception
+  {
+    ImportResult result = new ImportResult();
+    for (I18nBundle applicationBundle : xlsData.keySet())
+    {
+      Map<I18nLanguage, Properties> propertiesMap = xlsData.get(applicationBundle);
+      for (I18nLanguage language : propertiesMap.keySet())
+        result.addAll(importProperties(applicationBundle.getCodePk(), language, propertiesMap.get(language), isCreateMissingBundles));
+    }
+    return result;
+  }
+
+  private ImportResult importProperties(String applicationBundleId, I18nLanguage language, Properties properties, boolean isCreateMissingBundles) throws Exception
+  {
+    ImportResult result = new ImportResult();
+    if (isCreateMissingBundles)
+      this.createBundleIfItDoesntExist(applicationBundleId);
+    createMessages(applicationBundleId, language, properties);
+    updateTranslations(applicationBundleId, language, properties);
+    createTranslations(applicationBundleId, language, properties);
+    return result;
+  }
+
+  private void createTranslations(String applicationBundleId, I18nLanguage language, Properties inProperties) throws Exception
+  {
+    List<Message> referenceKeysForMissingTranslations = this.findAllMessagesWithNoTranslations(applicationBundleId, language.getCodePk());
+    for (Message message : referenceKeysForMissingTranslations)
+      if (inProperties.containsKey(message.getId().getTagId()))
+      {
+        String value = (String) inProperties.get(message.getId().getTagId());
+        if (value != null)
+          value = value.trim();
+        Translation translation = new Translation(new TranslationId(message.getId().getTagId(), applicationBundleId, language.getCodePk()), language, null, new Date(), "validated");
+        this.createTranslation(translation);
+      }
+  }
+
+  private void updateTranslations(String applicationBundleId, I18nLanguage language, Properties inProperties) throws Exception
+  {
+    List<Translation> referenceExistingTranslations = this.findTranslationsByBundleAndLanguage(applicationBundleId, language.getCodePk());
+
+    for (Translation translation : referenceExistingTranslations)
+    {
+      if (inProperties.containsKey(translation.getId().getTagId()))
+      {
+        String newValue = (String) inProperties.get(translation.getId().getTagId());
+         if (newValue != null)
+          newValue = newValue.trim();
+        if (translation.getValue() != null && !translation.getValue().equals(newValue))
+        {
+          translation.setStatus("validated");
+          translation.setLastUpdate(new Date());
+          translation.setValue(newValue);
+          translation.setNewValue("");
+          translation.setComments("");
+          updateTranslation(translation);
+        }
+      }
+    }
+  }
+
+  private void createMessages(String applicationBundleId, I18nLanguage language, Properties inProperties) throws Exception
+  {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    Set<String> keys = new HashMap<String, String>((Map) inProperties).keySet();
+    final List<Message> referenceExistingMessages = findMessagesByBundle(applicationBundleId);
+    CollectionUtils.forAllDo(referenceExistingMessages, doForMessages(inProperties));
+    CollectionUtils.forAllDo(keys, doForProperties(referenceExistingMessages, applicationBundleId));
+  }
+
+  public void createBundleIfItDoesntExist(String applicationBundleId) throws Exception
+  {
+    I18nBundle bundle = this.findBundleById(applicationBundleId);
+    if (bundle == null)
+      this.createBundle(new I18nBundle(applicationBundleId, applicationBundleId, "1"));
+    else if (bundle.getIsActive().equals("0"))
+    {
+      bundle.setIsActive("1");
+      updateBundle(bundle);
+    }
   }
 
   private Query getFindAllBundlesQuery()
@@ -494,7 +648,7 @@ public class I18nSLSBImpl implements I18nSLSB
       findBundleByUserApplicationIdQuery = em.createNamedQuery("Bundle.findByUser");
     return findAllLanguages;
   }
-  
+
   private Query getfindAllWithDefaultEmptyValue()
   {
     if (findAllWithDefaultEmptyValueQuery == null)
@@ -502,7 +656,28 @@ public class I18nSLSBImpl implements I18nSLSB
     return findAllWithDefaultEmptyValueQuery;
   }
 
+  private Query getFindAllMessagessWithNoTranslations()
+  {
+    if (findAllMessagesWithNoTranslations == null)
+      findAllMessagesWithNoTranslations = em.createNamedQuery("Message.findAllWithNoTranslations");
+    return findAllMessagesWithNoTranslations;
+  }
 
+  private Query getFindMessagesByBundle()
+  {
+    if (findMessagesByBundle == null)
+      findMessagesByBundle = em.createNamedQuery("Message.findMessagesByBundle");
+    return findMessagesByBundle;
+  }
+
+  private Query getFindTranslationByByBundleandLanguage()
+  {
+    if (findTranslationByByBundleandLanguage == null)
+      findTranslationByByBundleandLanguage = em.createNamedQuery("Translation.findTranslationByByBundleandLanguage");
+    return findTranslationByByBundleandLanguage;
+  }
+
+  
   private ExcelBundleDataModel getExcelBundleDataSet(String[] bundleIds, String[] languageIds) throws Exception
   {
     ExcelBundleDataModel bundleDataSet = new ExcelBundleDataModel();
@@ -559,5 +734,53 @@ public class I18nSLSBImpl implements I18nSLSB
       }
     }
     return wb;
+  }
+
+  private Boolean isValid(String sheetName)
+  {
+    return (Pattern.compile("^([a-zA-Z0-9]+)$").matcher(sheetName).matches());
+  }
+
+  private Closure doForMessages(final Properties props)
+  {
+    Closure closure = new Closure()
+    {
+      @Override
+      public void execute(Object o)
+      {
+        Message msg = (Message)o;
+        if (msg.getSuppressed().contentEquals("1") && props.containsKey(msg.getId().getTagId()))
+          createMessage(msg);
+      }
+    };
+    return closure;
+  }
+
+  private Closure doForProperties(final List<Message> msgs, final String bundleId)
+  {
+    Closure closure = new Closure()
+    {
+      @Override
+      public void execute(Object o)
+      {
+        String key = (String)o;
+        boolean found = false;
+        for (Message msg : msgs)
+        {
+          if (key.equals(msg.getId().getTagId()))
+          {
+            found = true;
+            break;
+          }
+        }
+        if (!found)
+        {
+          Message message = new Message(new MessageId(key, bundleId), new I18nBundle(bundleId));
+          message.setSuppressed("0");
+          createMessage(message);
+        }
+      }
+    };
+    return closure;
   }
 }

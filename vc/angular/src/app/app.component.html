@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a routerLink="/" class="navbar-left"><img src="assets/logo_coface.png" class="img-responsive" alt="Coface logo"></a>
-            <span class="navbar-brand">Coface Translation Tools</span>
+            <span class="navbar-brand" [translate]="'application.title'"></span>
         </div>
 
         <ul class="nav navbar-nav">
@@ -27,7 +27,7 @@
             <li>
                 <a routerLink="/excel" routerLinkActive="active">Excel</a>
             </li>
-            <li role="presentation" class="dropdown">
+            <li role="presentation" class="dropdown" *ngIf="user?.canManageLanguages || user?.canManageBundles || user?.canRefreshCache">
                 <a routerLink="/administration" routerLinkActive="active" [translate]="'menu.administration'" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu">
@@ -48,7 +48,7 @@
         <div class="nav navbar-nav navbar-right">
             <span class="navbar-text">{{user?.displayedName}}</span>
             <button class="btn navbar-btn" [ngStyle]="{'color': envSignal?.color, 'background-color': envSignal?.backgroundColor}" (click)="logout()">
-					<span class="glyphicon glyphicon-log-out"></span> Logout {{envSignal?.shortName}}
+					<span class="glyphicon glyphicon-log-out"></span> {{ 'application.logout' | translate }} {{envSignal?.shortName}}
 				</button>
         </div>
     </div>

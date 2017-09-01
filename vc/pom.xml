@@ -36,7 +36,6 @@
             <!--HTTPS_PROXY>${myProxy}</HTTPS_PROXY -->
             <SASS_BINARY_SITE>http://dsiwikis.coface.dns/publication/fw/sass</SASS_BINARY_SITE>
           </environmentVariables>
-          <arguments>install primeng --save</arguments>
         </configuration>
         <executions>
           <execution>
@@ -157,6 +156,7 @@
       <groupId>com.sun.jersey.contribs</groupId>
       <artifactId>jersey-multipart</artifactId>
     </dependency>
+    
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>

@@ -2,8 +2,11 @@ package com.coface.corp.translationView.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@Embeddable
 @XmlRootElement
 public class MessageId implements Serializable
 {
@@ -21,6 +24,7 @@ public class MessageId implements Serializable
     this.codeApp = codeApp;
   }
 
+  @Column(name = "TAG_ID", nullable = false, length = 400)
   public String getTagId()
   {
     return this.tagId;
@@ -31,6 +35,7 @@ public class MessageId implements Serializable
     this.tagId = tagId;
   }
 
+  @Column(name = "CODE_APP", nullable = false, length = 400)
   public String getCodeApp()
   {
     return this.codeApp;
@@ -44,11 +49,7 @@ public class MessageId implements Serializable
   @Override
   public int hashCode()
   {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((codeApp == null) ? 0 : codeApp.hashCode());
-    result = prime * result + ((tagId == null) ? 0 : tagId.hashCode());
-    return result;
+    return 47;
   }
 
   @Override
@@ -56,25 +57,8 @@ public class MessageId implements Serializable
   {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!(obj instanceof MessageId))
       return false;
-    if (getClass() != obj.getClass())
-      return false;
-    MessageId other = (MessageId) obj;
-    if (codeApp == null)
-    {
-      if (other.codeApp != null)
-        return false;
-    }
-    else if (!codeApp.equals(other.codeApp))
-      return false;
-    if (tagId == null)
-    {
-      if (other.tagId != null)
-        return false;
-    }
-    else if (!tagId.equals(other.tagId))
-      return false;
-    return true;
+    return codeApp != null && codeApp.equals(((MessageId) obj).codeApp) && tagId != null && tagId.equals(((MessageId) obj).tagId);
   }
 }

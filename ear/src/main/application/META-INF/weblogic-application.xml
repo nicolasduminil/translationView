@@ -15,6 +15,9 @@
   <wls:listener>
     <wls:listener-class>com.coface.corp.framework.startup.LifeCycleListener</wls:listener-class>
   </wls:listener>
+  <wls:listener>
+	<wls:listener-class>com.coface.corp.framework.i18n.startup.DefaultI18nLifecycleListener</wls:listener-class>
+  </wls:listener>
   <wls:prefer-application-packages>
     <wls:package-name>antlr.*</wls:package-name>
   </wls:prefer-application-packages>
