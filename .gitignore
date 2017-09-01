@@ -6,9 +6,10 @@ tmp/
 *.swp
 *~.nib
 local.properties
-.settings/
+*.settings/
 .loadpath
 .recommenders
+**/target/
 *target*
 *.jar
 *.war
@@ -16,7 +17,7 @@ local.properties
 *.class
 
 # Eclipse Core
-.project
+*.project*
 
 # External tool builders
 .externalToolBuilders/
@@ -32,6 +33,7 @@ local.properties
 
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+*.classpath*
 
 # Java annotation processor (APT)
 .factorypath
@@ -53,6 +55,6 @@ local.properties
 
 # Code Recommenders
 .recommenders/
-*node_modules*
-*.dm*
-*webapp*
+**/node_modules
+.dm/
+**/webapp
